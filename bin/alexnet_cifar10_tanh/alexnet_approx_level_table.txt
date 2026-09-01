@@ -1,0 +1,11 @@
+Convolution 0 0 0 0 0 0
+Pooling 0 0 0 0 0 0 
+Convolution 0 0 0 0 0 0
+Pooling 0 0 0 0 0 0
+Convolution 0 0 0 0 0 0
+Convolution 0 0 0 0 0 0
+Convolution 0 0 0 0 0 0
+Pooling 0 0 0 0 0 0
+Dense 0 0 0 0 0 0
+Dense 0 0 0 0 0 0
+Dense 0 0 0 0 0 0

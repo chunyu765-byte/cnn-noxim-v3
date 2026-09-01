@@ -1,0 +1,14 @@
+Convolution 0 1 2 3 3 3
+Convolution 0 1 2 3 3 3
+Convolution 0 1 2 3 3 3
+Add 0 1 2 3 3 3
+Convolution 0 1 2 3 3 3
+Convolution 0 1 2 3 3 3
+Convolution 0 1 2 3 3 3
+Add 0 1 2 3 3 3
+Convolution 0 1 2 3 3 3
+Convolution 0 1 2 3 3 3
+Convolution 0 1 2 3 3 3
+Add 0 1 2 3 3 3
+Pooling 0 1 2 3 3 3
+Dense 0 1 2 3 3 3

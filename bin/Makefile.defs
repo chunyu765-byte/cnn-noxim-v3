@@ -1,0 +1,46 @@
+#############################
+# Noxim - the NoC Simulator #
+#############################
+
+# NOTE FOR NOXIM USERS: before running "make" you just have to modify
+# the following variable to point to your SystemC installation path
+#
+#SYSTEMC = /usr/systemc
+#SYSTEMC = /SYSTEMC/systemc
+SYSTEMC := /usr/local/systemc-2.3.1
+#
+# That's all for you!!!
+
+INCDIR = -I. -I.. -I../src -I$(SYSTEMC)/include
+LIBDIR = -L. -L.. -L../src -L$(SYSTEMC)/lib-$(TARGET_ARCH) 
+#-Wl,-rpath,$(SYSTEMC)/lib-$(TARGET_ARCH)
+
+#EXTRA_LIBS = -lpthread
+LIBS = -lsystemc -lm $(EXTRA_LIBS)
+
+
+
+EXE    = $(BUILDDIR)/$(MODULE)
+
+.SUFFIXES: .cpp .c .o 
+
+$(EXE): $(OBJS) $(OBJS_C) $(SYSTEMC)/lib-$(TARGET_ARCH)/libsystemc.a 
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCDIR) $(LIBDIR) -o $@ $(OBJS_A) $(LIBS) 2>&1 | c++filt
+
+$(BUILDDIR)/%.o: %.cpp
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCDIR) -c $< -o $@
+
+$(BUILDDIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	gcc -c $(INCDIR) $< -o $@
+clean:
+#	rm -f $(OBJS) *~ *.o $(EXE) core
+	rm -rf $(BUILDDIR)
+	rm -f *~ *.o *.flp PE_R_* PE_T_* output**.lcf grid_steady_temp core
+
+depend: 
+	makedepend $(SRCS) -Y -f Makefile.deps
+
+include ./Makefile.deps

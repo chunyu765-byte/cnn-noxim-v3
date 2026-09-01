@@ -1,0 +1,41 @@
+# Local Codex/session metadata
+.agents/
+.codex/
+
+# Build outputs
+bin/build/
+*.o
+*.so
+*.a
+*.out
+
+# Runtime logs and generated reports
+run_log/
+bin/run_log/
+bin/PE_log/
+bin/results/
+bin/*.pid
+bin/output.txt
+*.log
+
+# Large/generated simulation caches
+*.traffic_cache*
+*.coord_cache*
+
+# Local backup snapshots
+backup_*/
+src.backup_*/
+*.backup_*
+*.before_*
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Downloaded CIFAR data
+Resnet8_CIFAR10/data/
+
+# Common editor/OS files
+.DS_Store
+*.swp
+*~

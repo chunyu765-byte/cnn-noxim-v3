@@ -1,0 +1,17 @@
+image_dir=/home/camila/cnn-noxim/CIFAR10
+images=idx_00000_label_cat.png,idx_00001_label_ship.png,idx_00003_label_airplane.png,idx_00004_label_frog.png,idx_00006_label_automobile.png,idx_00012_label_dog.png,idx_00013_label_horse.png,idx_00022_label_deer.png,idx_00025_label_bird.png,idx_01824_label_truck.png
+labels=3 8 0 6 1 5 7 4 2 9
+input_scale=7.140072176358732e-05
+input_clipped_values=568
+layer type fas_q20 fas_q40 fas_q60 fas_q80 sap_q20 sap_q40 sap_q60 sap_q80
+1 Convolution 779 1879 3540 6945 286 738 1565 3360
+2 Pooling 1004 2311 4298 7922 398 1042 2200 4723
+3 Convolution 1561 3317 5768 9844 821 1901 3548 6589
+4 Pooling 2064 4312 7219 11939 1158 2637 4693 8535
+5 Convolution 1420 3034 5104 8103 936 2069 3608 6101
+6 Convolution 932 1930 3197 5143 542 1204 2078 3514
+7 Convolution 1068 2273 3926 6756 745 1621 2792 4724
+8 Pooling 1443 2917 4780 8162 1027 2143 3688 6229
+9 Dense 1229 2755 4793 7699 1198 2604 4645 7396
+10 Dense 1101 2388 4133 7288 1047 2280 4034 7139
+11 Dense 2143 5093 7461 9491 1392 2363 5004 7243

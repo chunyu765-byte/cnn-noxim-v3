@@ -1,0 +1,12 @@
+# Representative CIFAR-10 images for cycle-level NoC simulation
+# Format: class_id class_name test_index filename
+0 airplane 3 idx_00003_label_airplane.png
+1 automobile 6 idx_00006_label_automobile.png
+2 bird 25 idx_00025_label_bird.png
+3 cat 0 idx_00000_label_cat.png
+4 deer 22 idx_00022_label_deer.png
+5 dog 12 idx_00012_label_dog.png
+6 frog 4 idx_00004_label_frog.png
+7 horse 13 idx_00013_label_horse.png
+8 ship 1 idx_00001_label_ship.png
+9 truck 1824 idx_01824_label_truck.png

@@ -1,0 +1,11 @@
+Convolution 2 2 2 2 2 2
+Pooling 1 1 1 1 1 1
+Convolution 2 2 2 2 2 2
+Pooling 1 1 1 1 1 1
+Convolution 2 2 2 2 2 2
+Convolution 1 1 1 1 1 1
+Convolution 1 1 1 1 1 1
+Pooling 1 1 1 1 1 1
+Dense 1 1 1 1 1 1
+Dense 1 1 1 1 1 1
+Dense 1 1 1 1 1 1
