@@ -7,16 +7,27 @@
 #
 #SYSTEMC = /usr/systemc
 #SYSTEMC = /SYSTEMC/systemc
-SYSTEMC := /usr/local/systemc-2.3.1
+SYSTEMC ?= /usr/local/systemc-2.3.1
+SYSTEMC_PKGCONFIG := $(shell pkg-config --exists systemc 2>/dev/null && echo yes)
 #
 # That's all for you!!!
 
-INCDIR = -I. -I.. -I../src -I$(SYSTEMC)/include
-LIBDIR = -L. -L.. -L../src -L$(SYSTEMC)/lib-$(TARGET_ARCH) 
+ifeq ($(SYSTEMC_PKGCONFIG),yes)
+SYSTEMC_CFLAGS := $(shell pkg-config --cflags systemc)
+SYSTEMC_LIBS := $(shell pkg-config --libs systemc)
+SYSTEMC_PREREQ :=
+else
+SYSTEMC_CFLAGS := -I$(SYSTEMC)/include
+SYSTEMC_LIBS := -L$(SYSTEMC)/lib-$(TARGET_ARCH) -lsystemc
+SYSTEMC_PREREQ := $(SYSTEMC)/lib-$(TARGET_ARCH)/libsystemc.a
+endif
+
+INCDIR = -I. -I.. -I../src $(SYSTEMC_CFLAGS)
+LIBDIR = -L. -L.. -L../src
 #-Wl,-rpath,$(SYSTEMC)/lib-$(TARGET_ARCH)
 
 #EXTRA_LIBS = -lpthread
-LIBS = -lsystemc -lm $(EXTRA_LIBS)
+LIBS = $(SYSTEMC_LIBS) -lm $(EXTRA_LIBS)
 
 
 
@@ -24,7 +35,7 @@ EXE    = $(BUILDDIR)/$(MODULE)
 
 .SUFFIXES: .cpp .c .o 
 
-$(EXE): $(OBJS) $(OBJS_C) $(SYSTEMC)/lib-$(TARGET_ARCH)/libsystemc.a 
+$(EXE): $(OBJS) $(OBJS_C) $(SYSTEMC_PREREQ)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCDIR) $(LIBDIR) -o $@ $(OBJS_A) $(LIBS) 2>&1 | c++filt
 
