@@ -15,7 +15,16 @@
  * This file contains the implementation of loading NN model
  */
 #include "NoximCmdLineParser.h"
+#include <unistd.h>
 //---------------------------------------------------------------------------
+namespace {
+int getMaxWorkerThreads()
+{
+	long cpus = sysconf(_SC_NPROCESSORS_ONLN);
+	return cpus > 0 ? static_cast<int>(cpus) : 1;
+}
+}
+
 void showHelp(char selfname[])
 {
     cout << "Usage: " << selfname <<
@@ -58,12 +67,12 @@ void showHelp(char selfname[])
 			"\t-pe_log N\tEnable/disable PE TX/RX logs (1=on, 0=off, default 1)"
 			<< endl;
 	    cout <<
-			"\t-pe_compute_threads N\tOpenMP threads for exact PE compute only (1..4, default "
-			<< DEFAULT_PE_COMPUTE_THREADS << ")"
+			"\t-pe_compute_threads N\tOpenMP threads for exact PE compute only (1.."
+			<< getMaxWorkerThreads() << ", default " << DEFAULT_PE_COMPUTE_THREADS << ")"
 			<< endl;
 	    cout <<
-			"\t-precompute_threads N\tOpenMP threads for coordinate/traffic cache pre-computation (1..4, default "
-			<< DEFAULT_PRECOMPUTE_THREADS << ")"
+			"\t-precompute_threads N\tOpenMP threads for coordinate/traffic cache pre-computation (1.."
+			<< getMaxWorkerThreads() << ", default " << DEFAULT_PRECOMPUTE_THREADS << ")"
 			<< endl;
 	    cout <<
 			"\t-thermal_update N\tEnable/disable HotSpot temperature update (1=on, 0=off, default "
@@ -441,16 +450,19 @@ void checkInputParameters()
 			 << NoximGlobalParams::pe_log_enable << ")" << endl;
 		exit(1);
 	}
-	if (NoximGlobalParams::pe_compute_threads < 1 || NoximGlobalParams::pe_compute_threads > 4)
+	const int max_worker_threads = getMaxWorkerThreads();
+	if (NoximGlobalParams::pe_compute_threads < 1 || NoximGlobalParams::pe_compute_threads > max_worker_threads)
 	{
-		cerr << "Error: -pe_compute_threads must be in [1,4] on this workstation (current: "
-			 << NoximGlobalParams::pe_compute_threads << ")" << endl;
+		cerr << "Error: -pe_compute_threads must be in [1," << max_worker_threads
+			 << "] on this workstation (current: " << NoximGlobalParams::pe_compute_threads
+			 << ")" << endl;
 		exit(1);
 	}
-	if (NoximGlobalParams::precompute_threads < 1 || NoximGlobalParams::precompute_threads > 4)
+	if (NoximGlobalParams::precompute_threads < 1 || NoximGlobalParams::precompute_threads > max_worker_threads)
 	{
-		cerr << "Error: -precompute_threads must be in [1,4] on this workstation (current: "
-			 << NoximGlobalParams::precompute_threads << ")" << endl;
+		cerr << "Error: -precompute_threads must be in [1," << max_worker_threads
+			 << "] on this workstation (current: " << NoximGlobalParams::precompute_threads
+			 << ")" << endl;
 		exit(1);
 	}
 	if (NoximGlobalParams::thermal_update != 0 && NoximGlobalParams::thermal_update != 1)
