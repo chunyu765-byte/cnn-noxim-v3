@@ -1,3 +1,111 @@
+# cnn-noxim-v3 快速说明
+
+本仓库是 CNN-NoC/Noxim 仿真实验工程。更完整的新电脑安装步骤见 `新电脑安装与运行.md`，常用运行命令见 `常用命令.md`。
+
+## 新电脑环境
+
+推荐系统：Ubuntu 24.04 LTS。
+
+优先使用系统包安装 SystemC：
+
+```bash
+sudo apt update
+sudo apt install -y build-essential git make wget tar pkg-config libsystemc-dev python3 python3-venv python3-pip
+```
+
+如果工位电脑不方便使用 `sudo`，也可以把新版 SystemC 安装到用户目录，例如：
+
+```text
+/home/neil-pc/.local/systemc-3.0.2
+```
+
+当前 `bin/Makefile.defs` 会优先使用 `pkg-config systemc`；如果没有系统包，会自动检查 `$(HOME)/.local/systemc-3.0.2`，最后再回退到旧路径 `/usr/local/systemc-2.3.1`。因此这台新电脑上直接执行 `make` 即可。
+
+## 编译
+
+```bash
+cd ~/cnn-noxim-v3/bin
+make -j"$(nproc)"
+```
+
+编译成功后生成：
+
+```text
+bin/build/noxim
+```
+
+## 多线程参数
+
+当前 Noxim 支持两个线程参数：
+
+```text
+-precompute_threads N   坐标/通信缓存预计算线程数
+-pe_compute_threads N   精确 PE 计算线程数
+```
+
+线程上限会按当前机器在线 CPU 数自动判断。例如这台 20 核心线程机器上，`./build/noxim -help` 会显示 `1..20`。
+
+## ResNet8 精确仿真示例
+
+```bash
+cd ~/cnn-noxim-v3/bin
+./build/noxim \
+  -dimx 8 -dimy 8 -dimz 1 \
+  -NNmodel resnet8_cifar10/resnet8_model.txt \
+  -NNweight resnet8_cifar10/resnet8_weight_fc_wb2parser.txt \
+  -NNweight_scale resnet8_cifar10/resnet8_weight_scale.txt \
+  -NNinput resnet8_cifar10/resnet8_input.txt \
+  -NNapprox resnet8_cifar10/resnet8_approx.txt \
+  -NNapprox_Level_Table resnet8_cifar10/resnet8_approx_level_table.txt \
+  -NNlabel resnet8_cifar10/resnet8_label.txt \
+  -mapping dir_x \
+  -groupsize 4096 \
+  -pe_log 0 \
+  -sim 4000000 \
+  -stop_on_infer_done 1 \
+  -precompute_threads 20 \
+  -pe_compute_threads 20 \
+  -thermal_update 0 \
+  -isapprox 0 -allzeropacket 0 -zero_skip 0 \
+  -acdc_abdtr 0 -is_sap_rle 0 -is_sap_rle_v2 0
+```
+
+## VGG11 精确仿真示例
+
+```bash
+cd ~/cnn-noxim-v3/bin
+./build/noxim \
+  -dimx 8 -dimy 8 -dimz 1 \
+  -NNmodel vgg11_cifar10/vgg11_model.txt \
+  -NNweight vgg11_cifar10/vgg11_weight_fc_wb2parser.txt \
+  -NNweight_scale vgg11_cifar10/vgg11_weight_scale.txt \
+  -NNinput vgg11_cifar10/vgg11_input.txt \
+  -NNapprox vgg11_cifar10/vgg11_approx.txt \
+  -NNapprox_Level_Table vgg11_cifar10/vgg11_approx_level_table.txt \
+  -NNlabel vgg11_cifar10/vgg11_label.txt \
+  -mapping dir_x \
+  -groupsize 4096 \
+  -pe_log 0 \
+  -sim 4000000 \
+  -stop_on_infer_done 1 \
+  -precompute_threads 20 \
+  -pe_compute_threads 20 \
+  -thermal_update 0 \
+  -isapprox 0 -allzeropacket 0 -zero_skip 0 \
+  -acdc_abdtr 0 -is_sap_rle 0 -is_sap_rle_v2 0
+```
+
+## VSCode 头文件路径
+
+如果 VSCode 不能识别 `systemc.h`，在 C/C++ 配置里加入当前 SystemC include 路径之一：
+
+```text
+/home/neil-pc/.local/systemc-3.0.2/include
+/usr/local/systemc-2.3.1/include
+```
+
+---
+
 # 常用：
 ./build/noxim -dimx 8 -dimy 8 -dimz 1   -NNmodel lenet5/model.txt   -NNweight lenet5/weight.txt   -NNweight_scale lenet5/weight_scale.txt   -NNinput lenet5/input1_new.txt   -NNapprox lenet5/approx.txt   -NNlabel lenet5/label1.txt   -mapping dir_x   -groupsize 1024   -sim 20000 > run_log/run_log_26_04_14_2.txt
 # 使用方法：
